@@ -1,5 +1,5 @@
-class Bank
-  def bet
+# frozen_string_literal: true
 
-  end
+class Bank
+  def bet; end
 end
