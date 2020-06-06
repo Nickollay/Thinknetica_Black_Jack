@@ -1,14 +1,24 @@
 # frozen_string_literal: true
 
-class Deck
-  require_relative './card'
+require_relative './card'
 
+class Deck
   SUITS = ['♥', '♠', '♣', '♦']
   FACES = [*(2..10), 'J', 'Q', 'K', 'A']
 
   def initialize
     @deck = []
+    deck
+    @deck.shuffle!.reverse!.shuffle!
+  end
 
+  def deal(num = 1)
+    @deck.pop(num)
+  end
+
+  private
+
+  def deck
     FACES.each do |face|
       if face.class == Integer
         value = face
@@ -21,11 +31,5 @@ class Deck
         @deck << Card.new(face, suit, value)
       end
     end
-    @deck.shuffle!.reverse!.shuffle!
   end
-
-  def deal
-
-  end
-
 end

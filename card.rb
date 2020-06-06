@@ -9,4 +9,8 @@ class Card
     @suit = suit
     @face = face
   end
+
+  def show
+    "#{@value}#{@suit}"
+  end
 end
