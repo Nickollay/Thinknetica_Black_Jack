@@ -12,8 +12,8 @@ class Deck
     @deck.shuffle!.reverse!.shuffle!
   end
 
-  def deal(num = 1)
-    @deck.pop(num)
+  def deal(quantity = 1)
+    @deck.pop(quantity)
   end
 
   private

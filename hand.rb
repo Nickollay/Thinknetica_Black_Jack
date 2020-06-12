@@ -3,13 +3,16 @@
 class Hand
   attr_reader :total_value
 
+
   def initialize
     @hand = []
+    @total_value = 0
   end
 
   def take_card(card)
     @hand.concat(card)
-# TODO add metod to check if > 21 and include Ace => ace.value = 1
+    row_value
+    ace_21_checker!
   end
 
   def show
@@ -19,6 +22,18 @@ class Hand
   private
 
   def row_value
-    @hand.map(&:value).sum
+    @total_value = @hand.map(&:value).sum
+  end
+
+  def ace_21_checker!
+    @total_value -= 10 if twenty_one? && ace?
+  end
+
+  def twenty_one?
+    @total_value >= 21
+  end
+
+  def ace?
+    (@hand.map(&:face) * ',').include? 'A'
   end
 end
