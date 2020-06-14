@@ -3,20 +3,34 @@
 require_relative 'hand'
 
 class User
-  attr_accessor :name
+  attr_accessor :name, :pass, :hand
   attr_reader :bankroll
 
   def initialize(name = 'Player', bankroll = 100)
     @name = name
     @bankroll = bankroll
     @hand = Hand.new
+    @pass = false
   end
 
   def bet(bet_size = 10)
-    # raise "I'm bankrupt." if bankroll.zero?
-
+    bankrupt!
     @bankroll -= bet_size
     bet_size
+  end
+
+  def pass?(decision = false)
+    _decision = decision
+  end
+
+  def take_card(card)
+    hand.take_card(card)
+  end
+
+  private
+
+  def bankrupt!
+    raise StandardError, "#{name} is bankrupt." if @bankroll.zero?
   end
 
 

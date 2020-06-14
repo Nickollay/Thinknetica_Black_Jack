@@ -3,7 +3,6 @@ require_relative './dealer'
 require_relative './card'
 require_relative './deck'
 require_relative './bank'
-require_relative './table'
 require_relative './hand'
 
 
