@@ -23,6 +23,10 @@ class Hand
     @hand.map(&:hide) * ', '
   end
 
+  def size_three?
+    @hand.count == 3
+  end
+
   private
 
   def row_value

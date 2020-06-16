@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'messages'
 
 class Interface
   include Messages
@@ -19,65 +20,11 @@ class Interface
 
   def user_choice
     puts user_choices_message
-    input
+    gets.chomp
   end
 
 
-
-  # def start
-
-
-
-
-
-    input_message
-    game.first_choice(@input)
-
-
-    private
-
-    def input
-      @input = gets.chomp
-    end
-
-
-
-
-
-    # FIRST_CHOISE_LOGIC = {
-    #     '1' => :pass,
-    #     '2' => :take_card,
-    #     '3' => :open_cards
-    # }
-
-      puts 'You can input only: 1, 2, 3'
-      input
-      input_message
-    end
-
-
-
-
-
-
-
-
-
-
-
-
-
-  # rescue StandardError => e
-  #   puts e.message
+  # def input
+  #   @input = gets.chomp
   # end
-
-
-  private
-
-
-  def exit
-    buy_message
-    ###
-
-  end
 end

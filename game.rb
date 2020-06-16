@@ -1,9 +1,16 @@
 
 
-require_relative './interface'
+require_relative 'interface'
+require_relative 'user'
+require_relative 'dealer'
+require_relative 'deck'
+require_relative 'bank'
+require_relative 'game_over'
 
 class Game
-  attr_accessor :user, :dealer, :deck, :bank
+  include GameOver
+
+  attr_accessor :user, :dealer, :deck, :bank, :wins
   attr_reader :interface
 
   def initialize
@@ -13,38 +20,49 @@ class Game
     @deck = Deck.new
     @bank = Bank.new
     @round_over = false
+    @wins = { user: 0, dealer: 0 }
     start
   end
 
   def start
-    user.name = interface.set_user
-    greetings_message(user.name)
-    go
+    game
   end
-
-
 
   private
 
+  def game
+    user.name = interface.set_user
+    interface.greetings_message(user.name)
+    go
+    winner
+  rescue GameOverError => e
+    puts e.message
+  ensure
+    #TODO add logic - user see results of all rounds & can start new one or exit
+
+
+  end
+
   def go
     first_deal
-    next_deal until round_over?
+    next_deal until open_cards?
   end
 
   def first_deal
     round_begin
     interface.deal_message
+    status
+  end
+
+  def status
     interface.status_message(bank_show, user_show, dealer_show)
   end
 
   def next_deal
     user_choice(interface.user_choice)
-
+    p 3
     dealer_choice
-
-
-
-
+    p 5
   end
 
   def round_begin
@@ -62,6 +80,7 @@ class Game
   end
 
   def deal_to_user(quantity = 1)
+    p 2
     user.take_card(deck.deal(quantity))
   end
 
@@ -69,14 +88,14 @@ class Game
     dealer.take_card(deck.deal(quantity))
   end
 
-  FIRST_CHOICE = {
+  USER_CHOICE = {
       '1' => :pass,
       '2' => :take_card,
       '3' => :open_cards
   }.freeze
 
   def user_choice(input)
-    send FIRST_CHOICE[input]
+    send USER_CHOICE[input]
   end
 
   def pass
@@ -85,14 +104,30 @@ class Game
   end
 
   def take_card
+    p 0
     interface.take_card_message
+    p 1
     deal_to_user
+
   end
 
   def open_cards
     interface.open_cards_message
-    #TODO add logic
+    @round_over = true
+  end
 
+  def open_cards?
+    return true if @round_over || both_passed? || both_have_three_cards?
+
+    false
+  end
+
+  def both_passed?
+    user.pass? && dealer.pass?
+  end
+
+  def both_have_three_cards?
+    user.hand.size_three? && dealer.hand.size_three?
   end
 
   def bank_show
@@ -105,6 +140,7 @@ class Game
       Bankroll: #{user.bankroll}
       Cards:    #{user.hand.show}
       Points:   #{user.hand.total_value}
+      Wins:     #{wins[:user]}
     USER_INFO
   end
 
@@ -112,67 +148,81 @@ class Game
     <<-USER_INFO
         #{dealer.name}:
         Bankroll: #{dealer.bankroll}
-        Cards:    #{dealer.hand.hide}
-        Points:   #{dealer.hand.total_value}
+        Cards:    #{open_cards? ? dealer.hand.show : dealer.hand.hide}
+        Points:   #{open_cards? ? dealer.hand.total_value : '**'}
+        Wins:     #{wins[:dealer]}
     USER_INFO
   end
 
-  def round_over?
-    return true if @round_over
-    #TODO..other logic
-  end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  private
-
-
-
-
-
-
-
-
-
-
-
-
-
   def dealer_choice
-      return dealer.pass= true if dealer.enough?
+    return dealer.pass = true if dealer.enough?
 
-
-
-
-      take_card
+    p 4
+      #TODO dealer should take card not user there
+    # take_card
   end
 
+#TODO: refactor method winner later
+  def winner
+    if user_overtook? && dealer_overtook?
+      tie
+    elsif user_overtook?
+      dealer_wins
+    elsif dealer_overtook?
+      user_wins
+    elsif user_have_more_points?
+      user_wins
+    elsif !user_have_more_points?
+      dealer_wins
+    else
+      tie
+    end
+    status
+  end
+
+  def dealer_wins
+    interface.dealer_wins_message
+    winner_prize(dealer)
+    wins[:dealer] += 1
+  end
+
+  def user_wins
+    interface.user_wins_message(user.name)
+    winner_prize(user)
+    wins[:user] += 1
+  end
+
+  def tie
+    interface.tie_massage
+    tie_prize
+  end
+
+  def winner_prize(player)
+    player.bankroll = bank.prize
+  end
+
+  def tie_prize
+    user.bankroll = bank.prize(2)
+    dealer.bankroll = bank.prize(2)
+  end
+
+  def user_points
+    user.hand.total_value
+  end
+
+  def dealer_points
+    dealer.hand.total_value
+  end
+
+  def user_overtook?
+    user_points > 21
+  end
+
+  def dealer_overtook?
+    dealer_points > 21
+  end
+
+  def user_have_more_points?
+    user_points > dealer_points
+  end
 end
-
-
-
-
-
-
-
-
-
-
-

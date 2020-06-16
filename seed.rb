@@ -16,7 +16,17 @@ user = User.new
 dealer.pass = true
 p dealer.inspect
 
-p User::
+
 
 # p d.deal.face
-
+# class GameOverError < StandardError; end
+#
+# def foo_error
+#   raise GameOverError.new, 'Game over!'
+#
+#
+# rescue GameOverError => e
+#   puts e.message
+# end
+#
+# foo_error

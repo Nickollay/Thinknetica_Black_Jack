@@ -38,4 +38,16 @@ module Messages
     puts "You've chosen to open cards"
   end
 
+  def dealer_wins_message
+    puts 'Dealer wins! You loose.'
+  end
+
+  def user_wins_message(user_name)
+    puts "#{user_name}, congratulations? you win!"
+  end
+
+  def tie_massage
+    puts 'This round of Black Jack ends in a Tie!'
+  end
+
 end

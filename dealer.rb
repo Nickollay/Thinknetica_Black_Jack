@@ -8,8 +8,6 @@ class Dealer < User
     @name = 'Dealer'
   end
 
-   private
-
   def enough?
     hand.total_value >= 17
   end
