@@ -13,4 +13,8 @@ class Card
   def show
     "#{@value}#{@suit}"
   end
+
+  def hide
+    '*'
+  end
 end

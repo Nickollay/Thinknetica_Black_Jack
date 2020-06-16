@@ -12,5 +12,11 @@ h.take_card(d.deal(8))
 # puts h.ace?
 dealer = Dealer.new
 p dealer.inspect
+user = User.new
+dealer.pass = true
+p dealer.inspect
+
+p User::
+
 # p d.deal.face
 

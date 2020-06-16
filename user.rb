@@ -3,7 +3,8 @@
 require_relative 'hand'
 
 class User
-  attr_accessor :name, :pass, :hand
+  attr_accessor :name, :hand
+  attr_writer :pass
   attr_reader :bankroll
 
   def initialize(name = 'Player', bankroll = 100)
@@ -19,8 +20,8 @@ class User
     bet_size
   end
 
-  def pass?(decision = false)
-    _decision = decision
+  def pass?
+    @pass
   end
 
   def take_card(card)

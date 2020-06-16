@@ -19,6 +19,10 @@ class Hand
     @hand.map(&:show) * ', '
   end
 
+  def hide
+    @hand.map(&:hide) * ', '
+  end
+
   private
 
   def row_value
