@@ -1,29 +1,37 @@
 # frozen_string_literal: true
 
-require_relative './game'
 
 class Interface
   include Messages
-  attr_accessor :game
 
-  def initialize
-    @game = Game.new
+  def initialize; end
+
+  def set_user
     hello_message
-    @game.user.name = gets.chomp
-    greetings_message
-    start
+    gets.chomp
   end
 
-  def start
-    round_begin
-    deal_message
+  def status_message(bank_show, user_show, dealer_show)
     puts bank_show
     puts user_show
     puts dealer_show
-    puts first_choice_message
+  end
+
+  def user_choice
+    puts user_choices_message
     input
+  end
+
+
+
+  # def start
+
+
+
+
+
     input_message
-    first_choice(@input)
+    game.first_choice(@input)
 
 
     private
@@ -32,12 +40,15 @@ class Interface
       @input = gets.chomp
     end
 
-    def input_message
-      return pass_message if @input == '1'
 
-      return take_card_message if @input == '2'
 
-      return open_cards_message if @input == '3'
+
+
+    # FIRST_CHOISE_LOGIC = {
+    #     '1' => :pass,
+    #     '2' => :take_card,
+    #     '3' => :open_cards
+    # }
 
       puts 'You can input only: 1, 2, 3'
       input
@@ -56,9 +67,9 @@ class Interface
 
 
 
-  rescue StandardError => e
-    puts e.message
-  end
+  # rescue StandardError => e
+  #   puts e.message
+  # end
 
 
   private

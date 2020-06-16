@@ -1,6 +1,6 @@
 module Messages
-  def greetings_message
-    puts "#{game.user.name} welcome to Casino BJ!"
+  def greetings_message(user_name)
+    puts "#{user_name} welcome to Casino BJ!"
     puts "Let's play Black Jack game!"
   end
 
@@ -17,7 +17,7 @@ module Messages
     sleep(2)
   end
 
-  def first_choice_message
+  def user_choices_message
     puts <<-CHOICE
       Enter:
       1. Pass
