@@ -20,7 +20,7 @@ class Hand
   end
 
   def hide
-    @hand.map(&:hide) * ', '
+    @hand.map(&:hide) * ''
   end
 
   def size_three?

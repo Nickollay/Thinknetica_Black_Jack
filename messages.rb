@@ -14,7 +14,7 @@ module Messages
 
   def deal_message
     puts 'Wait for a moment while Dealer deals.'
-    sleep(2)
+    sleep(1)
   end
 
   def user_choices_message
@@ -26,12 +26,30 @@ module Messages
     CHOICE
   end
 
+  def new_round_message
+    puts <<-CHOICE
+      Enter:
+      1. One more play round?
+      2. Exit
+    CHOICE
+  end
+
   def pass_message
     puts "You've passed"
   end
 
   def take_card_message
     puts "You've taken card"
+  end
+
+  def dealer_pass_message
+    sleep(1)
+    puts 'Dealer passed'
+  end
+
+  def dealer_take_card_message
+    sleep(1)
+    puts 'Dealer take card'
   end
 
   def open_cards_message
@@ -48,6 +66,14 @@ module Messages
 
   def tie_massage
     puts 'This round of Black Jack ends in a Tie!'
+  end
+
+  def border
+    puts '=' * 30
+  end
+
+  def line
+    puts '-' * 25
   end
 
 end

@@ -2,6 +2,7 @@
 
 require_relative 'interface'
 require_relative 'user'
+require_relative 'hand'
 require_relative 'dealer'
 require_relative 'deck'
 require_relative 'bank'
@@ -24,23 +25,21 @@ class Game
     start
   end
 
+  private
+
   def start
+    user.name = interface.set_user
+    interface.greetings_message(user.name)
     game
   end
 
-  private
-
   def game
-    user.name = interface.set_user
-    interface.greetings_message(user.name)
     go
     winner
+    new_round(interface.new_round)
   rescue GameOverError => e
     puts e.message
-  ensure
-    #TODO add logic - user see results of all rounds & can start new one or exit
-
-
+    quit
   end
 
   def go
@@ -60,9 +59,8 @@ class Game
 
   def next_deal
     user_choice(interface.user_choice)
-    p 3
     dealer_choice
-    p 5
+    status
   end
 
   def round_begin
@@ -80,7 +78,6 @@ class Game
   end
 
   def deal_to_user(quantity = 1)
-    p 2
     user.take_card(deck.deal(quantity))
   end
 
@@ -104,11 +101,18 @@ class Game
   end
 
   def take_card
-    p 0
     interface.take_card_message
-    p 1
     deal_to_user
+  end
 
+  def dealer_take_card
+    deal_to_dealer
+    interface.dealer_take_card_message
+  end
+
+  def dealer_pass
+    dealer.pass = true
+    interface.dealer_pass_message
   end
 
   def open_cards
@@ -117,7 +121,7 @@ class Game
   end
 
   def open_cards?
-    return true if @round_over || both_passed? || both_have_three_cards?
+    return true if @round_over || both_passed? || both_have_three_cards? || limit_moves?
 
     false
   end
@@ -128,6 +132,10 @@ class Game
 
   def both_have_three_cards?
     user.hand.size_three? && dealer.hand.size_three?
+  end
+
+  def limit_moves?
+    user.hand.size_three? && dealer.pass?
   end
 
   def bank_show
@@ -146,20 +154,27 @@ class Game
 
   def dealer_show
     <<-USER_INFO
-        #{dealer.name}:
-        Bankroll: #{dealer.bankroll}
-        Cards:    #{open_cards? ? dealer.hand.show : dealer.hand.hide}
-        Points:   #{open_cards? ? dealer.hand.total_value : '**'}
-        Wins:     #{wins[:dealer]}
+      #{dealer.name}:
+      Bankroll: #{dealer.bankroll}
+      Cards:    #{open_cards? ? dealer.hand.show : dealer.hand.hide}
+      Points:   #{open_cards? ? dealer.hand.total_value : '**'}
+      Wins:     #{wins[:dealer]}
     USER_INFO
   end
 
-  def dealer_choice
-    return dealer.pass = true if dealer.enough?
+  def wins_status
+    <<-WINS
+      #{dealer.name} wins: #{wins[:dealer]} times
+      #{user.name} wins: #{wins[:user]} times
+    WINS
+  end
 
-    p 4
-      #TODO dealer should take card not user there
-    # take_card
+  def dealer_choice
+    if dealer.enough?
+      dealer_pass
+    else
+      dealer_take_card
+    end
   end
 
 #TODO: refactor method winner later
@@ -172,7 +187,7 @@ class Game
       user_wins
     elsif user_have_more_points?
       user_wins
-    elsif !user_have_more_points?
+    elsif dealer_have_more_points?
       dealer_wins
     else
       tie
@@ -198,12 +213,13 @@ class Game
   end
 
   def winner_prize(player)
-    player.bankroll = bank.prize
+    player.bankroll += bank.prize
   end
 
   def tie_prize
-    user.bankroll = bank.prize(2)
-    dealer.bankroll = bank.prize(2)
+    tie_prize_each = bank.prize(2)
+    user.bankroll += tie_prize_each
+    dealer.bankroll += tie_prize_each
   end
 
   def user_points
@@ -224,5 +240,39 @@ class Game
 
   def user_have_more_points?
     user_points > dealer_points
+    end
+
+  def dealer_have_more_points?
+    user_points < dealer_points
+  end
+
+  def new_round(input)
+    send NEW_ROUND[input]
+  end
+
+  NEW_ROUND = {
+      '1' => :new_game,
+      '2' => :quit
+  }.freeze
+
+  def quit
+    interface.wins_status_message(wins_status)
+    interface.buy_message
+    sleep(2)
+    exit(0)
+  end
+
+  def new_game
+    erase_data
+    game
+  end
+
+  def erase_data
+    @deck = Deck.new
+    user.hand = Hand.new
+    dealer.hand = Hand.new
+    user.pass = false
+    dealer.pass = false
+    @round_over = false
   end
 end

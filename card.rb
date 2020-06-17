@@ -11,7 +11,7 @@ class Card
   end
 
   def show
-    "#{@value}#{@suit}"
+    "#{@face}#{@suit}"
   end
 
   def hide
