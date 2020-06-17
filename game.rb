@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 
 require_relative 'interface'
 require_relative 'user'
@@ -86,9 +86,9 @@ class Game
   end
 
   USER_CHOICE = {
-      '1' => :pass,
-      '2' => :take_card,
-      '3' => :open_cards
+    '1' => :pass,
+    '2' => :take_card,
+    '3' => :open_cards
   }.freeze
 
   def user_choice(input)
@@ -240,7 +240,7 @@ class Game
 
   def user_have_more_points?
     user_points > dealer_points
-    end
+  end
 
   def dealer_have_more_points?
     user_points < dealer_points

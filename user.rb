@@ -38,7 +38,4 @@ class User
   def bankrupt!
     raise GameOverError.new, "#{name} is bankrupt." if @bankroll.zero?
   end
-
-
-
 end

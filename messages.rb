@@ -75,5 +75,4 @@ module Messages
   def line
     puts '-' * 25
   end
-
 end
