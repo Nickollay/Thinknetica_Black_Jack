@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require_relative './user'
 require_relative './dealer'
 require_relative './card'
 require_relative './deck'
 require_relative './bank'
 require_relative './hand'
-
 
 d = Deck.new
 h = Hand.new
@@ -15,8 +16,6 @@ p dealer.inspect
 user = User.new
 dealer.pass = true
 p dealer.inspect
-
-
 
 # p d.deal.face
 # class GameOverError < StandardError; end

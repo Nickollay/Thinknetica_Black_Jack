@@ -3,8 +3,8 @@
 require_relative './card'
 
 class Deck
-  SUITS = ['♥', '♠', '♣', '♦']
-  FACES = [*(2..10), 'J', 'Q', 'K', 'A']
+  SUITS = ['♥', '♠', '♣', '♦'].freeze
+  FACES = [*(2..10), 'J', 'Q', 'K', 'A'].freeze
 
   def initialize
     @deck = []
@@ -18,18 +18,20 @@ class Deck
 
   private
 
+  #rubocop:disable all
   def deck
     FACES.each do |face|
-      if face.class == Integer
-        value = face
-      elsif face == 'A'
-        value = 11
-      else
-        value = 10
-      end
+      value = if face.class == Integer
+                face
+              elsif face == 'A'
+                11
+              else
+                10
+              end
       SUITS.each do |suit|
         @deck << Card.new(face, suit, value)
       end
     end
   end
+  #rubocop:enable all
 end

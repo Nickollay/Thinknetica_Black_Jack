@@ -14,7 +14,7 @@ class User
   def initialize(name = 'Player', bankroll = 100)
     @name = name
     @bankroll = bankroll
-    #TODO: plase Hand.new to Game class?
+    # TODO: plase Hand.new to Game class?
     @hand = Hand.new
     @pass = false
   end

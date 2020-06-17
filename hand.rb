@@ -3,7 +3,6 @@
 class Hand
   attr_reader :total_value
 
-
   def initialize
     @hand = []
     @total_value = 0

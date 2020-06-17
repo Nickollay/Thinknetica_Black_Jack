@@ -152,6 +152,7 @@ class Game
     USER_INFO
   end
 
+  #rubocop:disable all
   def dealer_show
     <<-USER_INFO
       #{dealer.name}:
@@ -161,6 +162,7 @@ class Game
       Wins:     #{wins[:dealer]}
     USER_INFO
   end
+  #rubocop:enable all
 
   def wins_status
     <<-WINS
@@ -177,7 +179,8 @@ class Game
     end
   end
 
-#TODO: refactor method winner later
+  # TODO: refactor method winner later
+  #rubocop:disable all
   def winner
     if user_overtook? && dealer_overtook?
       tie
@@ -194,6 +197,7 @@ class Game
     end
     status
   end
+  #rubocop:enable all
 
   def dealer_wins
     interface.dealer_wins_message
@@ -251,8 +255,8 @@ class Game
   end
 
   NEW_ROUND = {
-      '1' => :new_game,
-      '2' => :quit
+    '1' => :new_game,
+    '2' => :quit
   }.freeze
 
   def quit

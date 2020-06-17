@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Messages
   def greetings_message(user_name)
     puts "#{user_name} welcome to Casino BJ!"
