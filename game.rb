@@ -135,7 +135,7 @@ class Game
   end
 
   def limit_moves?
-    user.hand.size_three? && dealer.pass?
+    (user.hand.size_three? && dealer.pass?) || (dealer.hand.size_three? && user.pass?)
   end
 
   def bank_show
